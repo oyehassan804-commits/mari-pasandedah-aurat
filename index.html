@@ -1,0 +1,447 @@
+   <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinity Love | For You ❤️</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { --p-pink: #ff4d6d; --s-pink: #ffb3c1; --bg-grad: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%); }
+        .black-theme { --bg-grad: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2d1b4e 100%); }
+
+        body {
+            background: var(--bg-grad);
+            font-family: 'Poppins', sans-serif;
+            color: white; overflow-x: hidden; overflow-y: auto; min-height: 100vh;
+            transition: background 0.8s ease;
+            position: relative;
+        }
+        
+        @media (min-width: 768px) {
+            body { overflow: hidden; height: 100vh; }
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,77,109,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px) saturate(180%);
+            border: 2px solid rgba(255, 255, 255, 0.18);
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6), 
+                        inset 0 1px 0 rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        @media (min-width: 768px) {
+            .glass-card { border-radius: 30px; }
+        }
+        
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px rgba(255,77,109,0.4);
+            border-color: rgba(255,77,109,0.4);
+        }
+
+        .speaker-active { animation: pulse-speaker 0.8s infinite; }
+        @keyframes pulse-speaker {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.8; color: #ff4d6d; }
+        }
+
+        .mohtarma-glow {
+            display: inline-block;
+            color: #000000;
+            animation: mohtarmaFixedGlow 2s infinite ease-in-out;
+            /* text-shadow: 0 0 10px rgba(255, 77, 109, 0.3); */
+        }
+
+        @keyframes mohtarmaFixedGlow {
+            0%, 100% { transform: scale(1); filter: brightness(1); }
+            50% { transform: scale(1.05); filter: brightness(1.3) drop-shadow(0 0 15px #ff4d6d); }
+        }
+
+        .creamy-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px); z-index: 100; align-items: center; justify-content: center; }
+        .creamy-content { background: #fdf5e6; color: #000; width: 90%; max-width: 500px; padding: 40px; border-radius: 40px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+        .page { display: none; width: 100%; min-height: 100vh; position: relative; padding: 20px; flex-direction: column; align-items: center; justify-content: center; }
+        
+        @media (min-width: 768px) {
+            .page { position: absolute; top: 0; left: 0; height: 100%; min-height: auto; padding: 0; }
+        }
+        
+        .active { display: flex; animation: pageIn 1s ease-out forwards; }
+        @keyframes pageIn { from { opacity: 0; filter: blur(10px); } to { opacity: 1; filter: blur(0); } }
+
+        .harkat-icon { animation: bounce 3s infinite ease-in-out; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-15px) rotate(10deg); } }
+
+        .gift-container { position: relative; width: 150px; height: 150px; cursor: pointer; perspective: 1000px; }
+        .gift-lid { position: absolute; width: 160px; height: 40px; background: #ff758c; top: -20px; left: -5px; border-radius: 5px; z-index: 2; transition: 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .gift-body { width: 100%; height: 100%; background: var(--p-pink); border-radius: 5px; border: 2px solid white; }
+        .open .gift-lid { transform: translateY(-100px) rotate(-30deg); opacity: 0; }
+
+        .timeline-track { position: relative; padding-left: 30px; border-left: 3px dashed rgba(255, 77, 109, 0.5); }
+        /* .timeline-node { position: absolute; left: auto; width: 18px; height: 18px; background: rgb(255, 255, 255); border-radius: 50%; box-shadow: 0 0 15px var(--p-pink); } */
+        .slider-wrapper { width: 100%; max-width: 450px; height: 250px; overflow: hidden; border-radius: 20px; position: relative; }
+        
+        @media (min-width: 768px) {
+            .slider-wrapper { height: 300px; }
+        }
+        .slide { position: absolute; width: 100%; height: 100%; transition: 1s ease-in-out; opacity: 0; }
+        .slide.active-slide { opacity: 1; }
+        
+        .nav-btn { 
+            background: linear-gradient(45deg, var(--p-pink), #ff758c, #ffa07a); 
+            padding: 12px 30px;
+            font-size: 14px;
+            border-radius: 50px; 
+            font-weight: bold; 
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            box-shadow: 0 0 30px rgba(255, 77, 109, 0.5),
+                        0 10px 25px rgba(0,0,0,0.3); 
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        @media (min-width: 768px) {
+            .nav-btn { padding: 15px 45px; font-size: 16px; }
+        }
+        
+        .nav-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .nav-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .nav-btn:hover {
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 0 40px rgba(255, 77, 109, 0.8),
+                        0 15px 35px rgba(0,0,0,0.4);
+        }
+        
+        .nav-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .heart-bg { position: absolute; animation: floatUp 8s infinite linear; pointer-events: none; z-index: 0; opacity: 0.5; }
+        
+        @keyframes floatUp { 
+            0% { transform: translateY(100vh) scale(0) rotate(0deg); opacity: 0; } 
+            10% { opacity: 0.7; }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(-10vh) scale(1.5) rotate(360deg); opacity: 0; } 
+        }
+        
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            animation: sparkleAnim 1.5s ease-in-out infinite;
+            pointer-events: none;
+            box-shadow: 0 0 10px white;
+        }
+        
+        @keyframes sparkleAnim {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="fixed top-4 right-4 md:top-6 md:right-6 z-[200] flex gap-3 md:gap-4">
+        <button id="speakerBtn" onclick="toggleMusic()" class="bg-white/10 p-2 md:p-3 rounded-full backdrop-blur-md border border-white/20 transition-all hover:scale-110">
+            <span id="speakerIcon" class="text-lg md:text-xl">🔈</span>
+        </button>
+        <button onclick="toggleTheme()" class="bg-white/10 p-2 md:p-3 rounded-full backdrop-blur-md border border-white/20 transition-all hover:scale-110">
+            <span class="text-lg md:text-xl">🌓</span>
+        </button>
+    </div>
+
+    <audio id="loveSong" loop>
+        <source src="song.mpeg" type="audio/mpeg">
+    </audio>
+
+    <div id="hearts"></div>
+
+    <section id="p1" class="page active">
+        <div class="glass-card p-8 md:p-12 text-center max-w-lg mx-4 relative overflow-hidden">
+            <div class="absolute inset-0 opacity-10">
+                <div class="absolute top-0 left-0 w-40 h-40 bg-pink-500 rounded-full filter blur-3xl animate-pulse"></div>
+                <div class="absolute bottom-0 right-0 w-40 h-40 bg-purple-500 rounded-full filter blur-3xl animate-pulse" style="animation-delay: 1s;"></div>
+            </div>
+            <h1 style="font-family: 'Dancing Script';" class="text-4xl md:text-6xl text-pink-500 mb-6 md:mb-8 relative z-10 animate__animated animate__fadeInDown">Hi Butterfly!</h1>
+            <p class="text-lg md:text-xl mb-8 md:mb-10 text-gray-300 relative z-10 animate__animated animate__fadeIn animate__delay-1s">Ready for a cinematic journey with me ? ✨</p>
+            <button onclick="nextP('p2')" class="nav-btn relative z-10 animate__animated animate__bounceIn animate__delay-2s">Start Movie 🎬</button>
+        </div>
+    </section>
+
+    <section id="p2" class="page">
+        <div class="glass-card p-8 md:p-12 text-center w-11/12 max-w-sm mx-4">
+            <h2 class="text-xl md:text-2xl font-bold mb-6 md:mb-8">Counting Your Cuteness...</h2>
+            <div id="fill-bg" class="w-full h-5 bg-gray-800 rounded-full mb-6 overflow-hidden border border-pink-500/30">
+                <div id="fill" class="h-full bg-gradient-to-r from-pink-500 to-purple-500 w-0 transition-all duration-[3000ms]"></div>
+            </div>
+            <p id="percent" class="text-3xl md:text-4xl font-bold text-pink-500">0%</p>
+            <button onclick="runMeter()" id="mBtn" class="mt-6 md:mt-8 text-sm underline opacity-60 hover:opacity-100 transition-opacity">Your Cuteness</button>
+            <button onclick="nextP('p3')" id="n1" class="hidden nav-btn mt-6 md:mt-8">Continue</button>
+        </div>
+    </section>
+
+    <section id="p3" class="page">
+        <h2 class="text-2xl md:text-3xl font-bold mb-8 md:mb-12 text-pink-400 text-center px-4">Why You're Special...</h2>
+        <div class="flex flex-col gap-6 md:gap-8 w-full max-w-md px-4">
+            <div id="c1" class="glass-card p-5 md:p-6 flex items-center gap-4 md:gap-6 opacity-0">
+                <div class="text-4xl md:text-5xl harkat-icon">👀</div>
+                <div><h3 class="text-lg md:text-xl font-bold">Those Eyes</h3><p class="text-xs md:text-sm text-gray-400">I get lost in them every single time.</p></div>
+            </div>
+            <div id="c2" class="glass-card p-5 md:p-6 flex items-center gap-4 md:gap-6 opacity-0">
+                <div class="text-4xl md:text-5xl harkat-icon" style="animation-delay: 0.5s">😂</div>
+                <div><h3 class="text-lg md:text-xl font-bold">Your Laugh</h3><p class="text-xs md:text-sm text-gray-400">The most beautiful sound in my world.</p></div>
+            </div>
+            <div id="c3" class="glass-card p-5 md:p-6 flex items-center gap-4 md:gap-6 opacity-0">
+                <div class="text-4xl md:text-5xl harkat-icon" style="animation-delay: 1s">❤️</div>
+                <div><h3 class="text-lg md:text-xl font-bold">Your Soul</h3><p class="text-xs md:text-sm text-gray-400">Pure, kind, and absolutely rare.</p></div>
+            </div>
+        </div>
+        <button onclick="animateCards()" id="startCards" class="mt-8 md:mt-10 text-sm opacity-50 text-white underline hover:opacity-100 transition-opacity">Reveal Reasons</button>
+        <button onclick="nextP('p4')" id="n2" class="hidden nav-btn mt-8 md:mt-10">Next: Memories</button>
+    </section>
+
+    <section id="p4" class="page">
+        <h2 class="text-2xl md:text-3xl font-bold mb-6 md:mb-8 text-pink-400 px-4 text-center">Some Memories ✨</h2>
+        <div class="slider-wrapper glass-card mx-4">
+            <img src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=600" class="slide active-slide object-cover w-full h-full">
+            <img src="love.jpg" class="slide object-cover w-full h-full">
+             <img src="ludo.jpg" class="slide object-cover w-full h-full">
+             <img src="thanks.jpg" class="slide object-cover w-full h-full">
+            <img src="https://images.unsplash.com/photo-1494774157365-9e04c6720e47?w=600" class="slide object-cover w-full h-full">
+        </div>
+        <div class="flex gap-4 md:gap-6 mt-6 md:mt-10">
+            <button onclick="prevSlide()" class="p-3 md:p-4 bg-white/10 rounded-full hover:bg-white/20 transition-all text-xl md:text-2xl">←</button>
+            <button onclick="nextSlide()" class="p-3 md:p-4 bg-white/10 rounded-full hover:bg-white/20 transition-all text-xl md:text-2xl">→</button>
+        </div>
+        <button onclick="nextP('p5')" class="nav-btn mt-6 md:mt-10">Our Journey Timeline</button>
+    </section>
+
+    <section id="p5" class="page">
+        <div class="glass-card p-8 md:p-10 w-full max-w-md mx-4">
+            <h2 class="text-xl md:text-2xl font-bold mb-8 md:mb-10 text-center">How it's going...</h2>
+            <div class="timeline-track space-y-10 md:space-y-14">
+                <div class="relative animate__animated animate__fadeInLeft">
+                    <div class="timeline-node"></div>
+                    <h4 class="text-lg md:text-xl font-bold text-pink-400">First Meeting</h4>
+                    <p class="text-xs md:text-sm text-gray-400">Everything felt different that day.</p>
+                </div>
+                <div class="relative animate__animated animate__fadeInLeft animate__delay-1s">
+                    <div class="timeline-node"></div>
+                    <h4 class="text-lg md:text-xl font-bold text-pink-400">Late Night Talks</h4>
+                    <p class="text-xs md:text-sm text-gray-400">When I knew you were the one.</p>
+                </div>
+                <div class="relative animate__animated animate__fadeInLeft animate__delay-2s">
+                    <div class="timeline-node"></div>
+                    <h4 class="text-lg md:text-xl font-bold text-pink-400">Falling For You</h4>
+                    <p class="text-xs md:text-sm text-gray-400">And here we are... ❤️</p>
+                </div>
+            </div>
+            <button onclick="nextP('p6')" class="nav-btn mt-10 md:mt-12 w-full">Open Secret Gift 🎁</button>
+        </div>
+    </section>
+
+    <section id="p6" class="page">
+        <h2 class="text-xl md:text-2xl mb-8 md:mb-12 italic px-4 text-center">A surprise for you...</h2>
+        <div id="gift" class="gift-container" onclick="openGift()">
+            <div class="gift-lid"></div>
+            <div class="gift-body flex items-center justify-center">
+                <span id="giftMsg" class="opacity-0 font-bold text-xs md:text-sm text-center px-4">YOU ARE MY WORLD! ❤️</span>
+            </div>
+        </div>
+        <p id="hint" class="mt-6 md:mt-8 text-sm animate-pulse">Tap the box to open</p>
+        <button onclick="nextP('p7')" id="n3" class="hidden nav-btn mt-8 md:mt-12">Last Page</button>
+    </section>
+
+    <section id="p7" class="page text-center">
+        <div class="glass-card p-10 md:p-16 max-w-2xl mx-4">
+            <h1 class="text-3xl md:text-5xl font-bold mb-8 md:mb-12 animate__animated animate__heartBeat animate__infinite">Will you be mine?</h1>
+            <div class="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center">
+                <button onclick="showPop('yesPopup')" class="nav-btn px-12 md:px-20 text-xl md:text-2xl">YES! ❤️</button>
+                <button onclick="showPop('noPopup')" class="bg-white/10 px-8 md:px-12 py-3 md:py-4 rounded-full border border-white/20 text-lg md:text-xl hover:bg-white/20 transition-all">No</button>
+            </div>
+        </div>
+    </section>
+
+    <div id="thankYouPopup" class="creamy-overlay">
+        <div class="creamy-content animate__animated animate__fadeInUp">
+            <div class="w-full h-40 md:h-48 mb-6 md:mb-10 overflow-hidden rounded-2xl border-4 border-pink-200 shadow-xl">
+                <img src="nobita.jpg" class="w-full h-full object-cover">
+            </div>
+            <h2 class="text-2xl md:text-3xl font-bold mb-4 md:mb-6 mohtarma-glow">Thank You Madam G! ✨</h2>
+            <p class="text-3xl md:text-4xl mb-4 md:mb-6">😇💖👸</p>
+            <p class="text-sm md:text-base text-gray-600 italic mb-6 md:mb-10 px-4">"Mara is project ko dekhna ko dekhna ke liye shukriya..."</p>
+            <button onclick="hidePop('thankYouPopup')" class="bg-pink-600 text-white px-6 md:px-8 py-2 rounded-full text-sm font-bold hover:bg-pink-700 transition-all">Close with Love</button>
+        </div>
+    </div>
+
+    <div id="yesPopup" class="creamy-overlay">
+        <div class="creamy-content animate__animated animate__zoomIn">
+            <div class="text-7xl md:text-9xl mb-6 md:mb-8">😻</div>
+            <h2 class="text-3xl md:text-4xl font-bold mb-3 md:mb-4">I Knew It!</h2>
+            <p class="text-lg md:text-xl italic mb-6 md:mb-10 px-4">Hehe Thanks My Pasandedah Aurat. I am always waiting for you! ❤️</p>
+            <button onclick="showPop('thankYouPopup')" class="bg-black text-white px-8 md:px-10 py-2 md:py-3 rounded-full font-bold hover:bg-gray-800 transition-all text-sm md:text-base">Forever Yours ✨</button>
+        </div>
+    </div>
+
+    <div id="noPopup" class="creamy-overlay">
+        <div class="creamy-content animate__animated animate__fadeIn">
+            <div class="text-7xl md:text-9xl mb-6 md:mb-8">🥺</div>
+            <h2 class="text-3xl md:text-4xl font-bold mb-3 md:mb-4">Marzi hai Moti?</h2>
+            <p class="text-lg md:text-xl italic mb-6 md:mb-10 px-4">"Mana bohat piyar sa apk lye banaya ha Butterfly... Phir se soch lo?" 💔</p>
+            <button onclick="hidePop('noPopup')" class="bg-pink-600 text-white px-8 md:px-10 py-2 md:py-3 rounded-full font-bold hover:bg-pink-700 transition-all text-sm md:text-base">Dubara Sochti Hoon ✨</button>
+        </div>
+    </div>
+
+    <script>
+        const audio = document.getElementById('loveSong');
+        const speakerIcon = document.getElementById('speakerIcon');
+
+        function toggleMusic() {
+            if (audio.paused) {
+                audio.play();
+                speakerIcon.innerText = '🔊';
+                document.getElementById('speakerBtn').classList.add('speaker-active');
+            } else {
+                audio.pause();
+                speakerIcon.innerText = '🔈';
+                document.getElementById('speakerBtn').classList.remove('speaker-active');
+            }
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('black-theme');
+        }
+
+        function nextP(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const newPage = document.getElementById(id);
+            newPage.classList.add('active');
+            
+            // Add sparkles on page transition
+            for(let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const sparkle = document.createElement('div');
+                    sparkle.className = 'sparkle';
+                    sparkle.style.left = Math.random() * 100 + 'vw';
+                    sparkle.style.top = Math.random() * 100 + 'vh';
+                    sparkle.style.animationDelay = Math.random() + 's';
+                    document.body.appendChild(sparkle);
+                    setTimeout(() => sparkle.remove(), 1500);
+                }, i * 50);
+            }
+        }
+
+        function runMeter() {
+            document.getElementById('fill').style.width = '99.9%';
+            let c = 0;
+            const itv = setInterval(() => {
+                c++;
+                document.getElementById('percent').innerText = c + '%';
+                if(c >= 99) {
+                    clearInterval(itv);
+                    document.getElementById('percent').innerText = '99.9%';
+                    document.getElementById('n1').classList.remove('hidden');
+                    document.getElementById('mBtn').classList.add('hidden');
+                }
+            }, 30);
+        }
+
+        function animateCards() {
+            document.getElementById('startCards').classList.add('hidden');
+            const cards = ['c1', 'c2', 'c3'];
+            cards.forEach((id, i) => {
+                setTimeout(() => {
+                    const el = document.getElementById(id);
+                    el.style.opacity = '1';
+                    el.classList.add('animate__animated', 'animate__backInRight');
+                }, i * 1000);
+            });
+            setTimeout(() => document.getElementById('n2').classList.remove('hidden'), 3500);
+        }
+
+        let currentSlide = 0;
+        function nextSlide() {
+            const slides = document.querySelectorAll('.slide');
+            slides[currentSlide].classList.remove('active-slide');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active-slide');
+        }
+        function prevSlide() {
+            const slides = document.querySelectorAll('.slide');
+            slides[currentSlide].classList.remove('active-slide');
+            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+            slides[currentSlide].classList.add('active-slide');
+        }
+
+        function openGift() {
+            document.getElementById('gift').classList.add('open');
+            document.getElementById('giftMsg').style.opacity = '1';
+            document.getElementById('hint').classList.add('hidden');
+            confetti({ particleCount: 150, spread: 70 });
+            setTimeout(() => document.getElementById('n3').classList.remove('hidden'), 1000);
+        }
+
+        function showPop(id) {
+            document.querySelectorAll('.creamy-overlay').forEach(p => p.style.display = 'none');
+            document.getElementById(id).style.display = 'flex';
+            if(id === 'yesPopup' || id === 'thankYouPopup') confetti({ particleCount: 400, spread: 100, origin: { y: 0.6 } });
+        }
+
+        function hidePop(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        setInterval(() => {
+            const h = document.createElement('div');
+            const hearts = ['❤️', '💕', '💖', '💗', '💝', '💓'];
+            h.innerHTML = hearts[Math.floor(Math.random() * hearts.length)];
+            h.className = 'heart-bg';
+            h.style.left = Math.random() * 100 + 'vw';
+            h.style.fontSize = Math.random() * 30 + 15 + 'px';
+            h.style.animationDuration = (Math.random() * 4 + 6) + 's';
+            document.getElementById('hearts').appendChild(h);
+            setTimeout(() => h.remove(), 10000);
+        }, 300);
+    </script>
+</body>
+</html>
